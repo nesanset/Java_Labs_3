@@ -1,0 +1,32 @@
+missionId: M-2024-021
+date: 2024-11-03
+location: Токио, район Гиндза
+outcome: SUCCESS
+
+curse:
+  name: Проклятие стеклянной галереи
+  threatLevel: SPECIAL_GRADE
+
+sorcerers:
+  - name: Кугисаки Нобара
+    rank: GRADE_2
+  - name: Нанами Кэнто
+    rank: GRADE_1
+
+techniques:
+  - name: Соломенная кукла
+    type: INNATE
+    owner: Кугисаки Нобара
+    damage: 250000
+  - name: Коэффициент 7:3
+    type: INNATE
+    owner: Нанами Кэнто
+    damage: 980000
+
+economicAssessment:
+  totalDamageCost: 4800000
+  infrastructureDamage: 1700000
+  transportDamage: 900000
+  commercialDamage: 2200000
+  recoveryEstimateDays: 18
+  insuranceCovered: true

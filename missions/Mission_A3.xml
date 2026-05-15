@@ -1,0 +1,55 @@
+<mission>
+    <missionId>M-2024-025</missionId>
+    <date>2024-11-18</date>
+    <location>Токио, район Синдзюку</location>
+    <outcome>PARTIAL_SUCCESS</outcome>
+
+    <curse>
+        <name>Проклятие заброшенной станции</name>
+        <threatLevel>HIGH</threatLevel>
+    </curse>
+
+    <sorcerers>
+        <sorcerer>
+            <name>Инумаки Тоге</name>
+            <rank>SEMI_GRADE_1</rank>
+        </sorcerer>
+        <sorcerer>
+            <name>Панда</name>
+            <rank>GRADE_2</rank>
+        </sorcerer>
+    </sorcerers>
+
+    <techniques>
+        <technique>
+            <name>Проклятая речь</name>
+            <type>INNATE</type>
+            <owner>Инумаки Тоге</owner>
+            <damage>430000</damage>
+        </technique>
+        <technique>
+            <name>Горилла-режим</name>
+            <type>BODY</type>
+            <owner>Панда</owner>
+            <damage>390000</damage>
+        </technique>
+    </techniques>
+
+    <enemyActivity>
+        <behaviorType>AMBUSH_PREDATOR</behaviorType>
+        <targetPriority>ISOLATED_HUMANS</targetPriority>
+        <mobility>HIGH</mobility>
+        <escalationRisk>MEDIUM</escalationRisk>
+
+        <attackPatterns>
+            <pattern>атака из слепых зон</pattern>
+            <pattern>имитация звуков помощи</pattern>
+            <pattern>резкое отступление после контратаки</pattern>
+        </attackPatterns>
+
+        <countermeasuresUsed>
+            <measure>маскировка в теневых участках</measure>
+            <measure>разделение группы преследования</measure>
+        </countermeasuresUsed>
+    </enemyActivity>
+</mission>

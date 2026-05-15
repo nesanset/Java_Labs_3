@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Archive Hub</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main class="shell">
+    <header class="topbar">
+        <div>
+            <p class="eyebrow">MEPHI MISSION ARCHIVE</p>
+            <h1>Mission Archive Hub</h1>
+            <p class="lead">Архив миссий, HTTP API, PostgreSQL и отчеты в одном рабочем интерфейсе.</p>
+        </div>
+        <div class="topbar-actions">
+            <a class="button ghost" href="/swagger-ui.html" target="_blank">Swagger UI</a>
+            <button class="button ghost" id="refreshButton" type="button">Обновить</button>
+        </div>
+    </header>
+
+    <section class="workspace">
+        <section class="panel archive-panel">
+            <p class="section-label">Архив</p>
+            <h2>Сохраненные миссии</h2>
+            <div class="mission-list" id="missionList"></div>
+        </section>
+
+        <section class="panel details-panel">
+            <p class="section-label">Вывод</p>
+            <h2>Текст отчета</h2>
+            <div class="facts" id="missionFacts"></div>
+            <pre id="missionContent">Выберите миссию и нажмите "Показать".</pre>
+        </section>
+
+        <aside class="side-stack">
+            <section class="panel">
+                <p class="section-label">Импорт</p>
+                <h2>Загрузка миссии</h2>
+                <form id="importForm">
+                    <label class="field-label" for="missionFile">Файл миссии</label>
+                    <input id="missionFile" name="file" type="file">
+                    <button class="button primary" type="submit">Импортировать</button>
+                </form>
+                <div class="notice" id="statusBox">Архив готов к работе.</div>
+            </section>
+
+            <section class="panel">
+                <p class="section-label">Отчеты</p>
+                <h2>Отчет по миссии</h2>
+                <label class="field-label" for="reportType">Тип отчета</label>
+                <select id="reportType">
+                    <option value="detailed">detailed</option>
+                    <option value="summary">summary</option>
+                </select>
+                <div class="button-row">
+                    <button class="button secondary" id="showReportButton" type="button">Показать</button>
+                </div>
+            </section>
+        </aside>
+    </section>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>

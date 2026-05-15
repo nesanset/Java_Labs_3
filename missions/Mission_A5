@@ -1,0 +1,13 @@
+MISSION_CREATED|M-2024-031|2024-12-02|Токио, район Асакуса
+CURSE_DETECTED|Проклятие красных фонарей|HIGH
+SORCERER_ASSIGNED|Маки Дзэнин|GRADE_2
+SORCERER_ASSIGNED|Тодо Аой|GRADE_1
+TECHNIQUE_USED|Разрушительный удар|BODY|Тодо Аой|650000
+TECHNIQUE_USED|Проклятый инструмент: копьё|WEAPON|Маки Дзэнин|420000
+TIMELINE_EVENT|2024-12-02T18:05:00|DETECTION|Обнаружен источник проклятой энергии
+TIMELINE_EVENT|2024-12-02T18:11:00|ENGAGEMENT|Начало прямого столкновения
+TIMELINE_EVENT|2024-12-02T18:19:00|CIVILIAN_EVACUATION|Начата эвакуация гражданских
+ENEMY_ACTION|DIRECT_ASSAULT|атака по фронту
+ENEMY_ACTION|TRAP_USAGE|использование замкнутого пространства
+CIVILIAN_IMPACT|evacuated=43|injured=2|missing=0
+MISSION_RESULT|SUCCESS|damageCost=2100000
