@@ -1,4 +1,4 @@
-package mephi.lab3.web;//норм
+package mephi.lab3.web;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

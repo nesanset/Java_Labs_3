@@ -1,7 +1,7 @@
 package mephi.lab3.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
 import mephi.lab3.app.LoadedMission;
@@ -13,10 +13,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MissionMapper{
-    private static final TypeReference<Map<String, Map<String, Object>>> EXTENSION_TYPE = new TypeReference<>(){};
-    private static final TypeReference<Map<String, String>> EXTENSION_FIELDS_TYPE = new TypeReference<>(){};
-    private static final TypeReference<List<Map<String, String>>> EXTENSION_ENTRIES_TYPE = new TypeReference<>(){};
-
     private final ObjectMapper objectMapper;
 
     public MissionMapper(ObjectMapper objectMapper){
@@ -47,7 +43,7 @@ public class MissionMapper{
     }
 
     public Mission toDomain(MissionEntity entity){
-        return new Mission(entity.getMissionId(), entity.getDate(), entity.getLocation(), entity.getOutcome(), entity.getDamageCost(), toDomainSorcerers(entity.getParticipants()), toDomainCurse(entity.getCurse()), toDomainTechniques(entity.getTechniques()), entity.getNote(), toDomainExtensions(readExtensions(entity.getExtensionData())));
+        return new Mission(entity.getMissionId(), entity.getDate(), entity.getLocation(), entity.getOutcome(), entity.getDamageCost(), toDomainSorcerers(entity.getParticipants()), toDomainCurse(entity.getCurse()), toDomainTechniques(entity.getTechniques()), entity.getNote(), readExtensions(entity.getExtensionData()));
     }
 
     private void copyMissionFields(Mission mission, MissionEntity entity){
@@ -126,28 +122,6 @@ public class MissionMapper{
         return techniques;
     }
 
-    private Map<String, MissionExtensionBlock> toDomainExtensions(Map<String, Map<String, Object>> extensionData){
-        Map<String, MissionExtensionBlock> extensionBlocks = new LinkedHashMap<>();
-        if (extensionData == null){
-            return extensionBlocks;
-        }
-        for (String blockName : extensionData.keySet()){
-            MissionExtensionBlock block = new MissionExtensionBlock(blockName);
-            Map<String, Object> rawBlock = extensionData.get(blockName);
-            Map<String, String> fields = readExtensionFields(rawBlock);
-            for (Map.Entry<String, String> field : fields.entrySet()){
-                block.addField(field.getKey(), field.getValue());
-            }
-
-            List<Map<String, String>> entries = readExtensionEntries(rawBlock);
-            for (Map<String, String> extensionEntry : entries){
-                block.addEntry(extensionEntry);
-            }
-            extensionBlocks.put(blockName, block);
-        }
-        return extensionBlocks;
-    }
-
     private String writeExtensions(Map<String, MissionExtensionBlock> extensions){
         if (extensions == null || extensions.isEmpty()){
             return "{}";
@@ -159,31 +133,59 @@ public class MissionMapper{
         }
     }
 
-    private Map<String, Map<String, Object>> readExtensions(String extensionData){
+    private Map<String, MissionExtensionBlock> readExtensions(String extensionData){
+        Map<String, MissionExtensionBlock> extensionBlocks = new LinkedHashMap<>();
         if (extensionData == null || extensionData.isBlank()){
-            return Map.of();
+            return extensionBlocks;
         }
         try{
-            return objectMapper.readValue(extensionData, EXTENSION_TYPE);
+            JsonNode root = objectMapper.readTree(extensionData);
+            for (Map.Entry<String, JsonNode> blockEntry : root.properties()){
+                MissionExtensionBlock block = readExtensionBlock(blockEntry.getKey(), blockEntry.getValue());
+                extensionBlocks.put(blockEntry.getKey(), block);
+            }
         }catch (JsonProcessingException exception){
-            return Map.of();
+            return extensionBlocks;
+        }
+        return extensionBlocks;
+    }
+
+    private MissionExtensionBlock readExtensionBlock(String blockName, JsonNode rawBlock){
+        MissionExtensionBlock block = new MissionExtensionBlock(blockName);
+        readExtensionFields(rawBlock.path("fields"), block);
+        readExtensionEntries(rawBlock.path("entries"), block);
+        return block;
+    }
+
+    private void readExtensionFields(JsonNode fields, MissionExtensionBlock block){
+        if (!fields.isObject()){
+            return;
+        }
+        for (Map.Entry<String, JsonNode> field : fields.properties()){
+            if (!field.getValue().isNull()){
+                block.addField(field.getKey(), field.getValue().asText());
+            }
         }
     }
 
-    private Map<String, String> readExtensionFields(Map<String, Object> rawBlock){
-        Object fields = rawBlock.get("fields");
-        if (fields == null){
-            return Map.of();
+    private void readExtensionEntries(JsonNode entries, MissionExtensionBlock block){
+        if (!entries.isArray()){
+            return;
         }
-        return objectMapper.convertValue(fields, EXTENSION_FIELDS_TYPE);
-    }
-
-    private List<Map<String, String>> readExtensionEntries(Map<String, Object> rawBlock){
-        Object entries = rawBlock.get("entries");
-        if (entries == null){
-            return List.of();
+        for (JsonNode entry : entries){
+            if (!entry.isObject()){
+                continue;
+            }
+            Map<String, String> normalizedEntry = new LinkedHashMap<>();
+            for (Map.Entry<String, JsonNode> item : entry.properties()){
+                String value = "";
+                if (!item.getValue().isNull()){
+                    value = item.getValue().asText();
+                }
+                normalizedEntry.put(item.getKey(), value);
+            }
+            block.addEntry(normalizedEntry);
         }
-        return objectMapper.convertValue(entries, EXTENSION_ENTRIES_TYPE);
     }
 
     private FileFormat readFileFormat(String sourceFormat){

@@ -1,4 +1,4 @@
-package mephi.lab3.service;//норм
+package mephi.lab3.service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -91,10 +91,10 @@ public class MissionService{
         try{
             String content = new String(file.getBytes(), StandardCharsets.UTF_8);
             return missionLoader.loadContent(file.getOriginalFilename(), content);
-        }catch (IOException exception){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Не удалось прочитать файл миссии", exception);
-        }catch (MissionParseException exception){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Не удалось разобрать файл миссии: " + exception.getMessage(), exception);
+        }catch (IOException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Не удалось прочитать файл миссии", e);
+        }catch (MissionParseException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Не удалось разобрать файл миссии: " + e.getMessage(), e);
         }
     }
 

@@ -1,4 +1,4 @@
-package mephi.lab3.repository;//норм
+package mephi.lab3.repository;
 
 import java.util.Optional;
 import mephi.lab3.entity.MissionEntity;

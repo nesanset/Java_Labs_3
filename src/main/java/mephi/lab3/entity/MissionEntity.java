@@ -1,4 +1,4 @@
-package mephi.lab3.entity;//норм
+package mephi.lab3.entity;
 
 import jakarta.persistence.*;
 import java.util.*;
