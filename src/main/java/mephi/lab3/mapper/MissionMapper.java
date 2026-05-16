@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
 import mephi.lab3.app.LoadedMission;
 import mephi.lab3.domain.*;
+import mephi.lab3.dto.*;
 import mephi.lab3.entity.*;
 import mephi.lab3.parsing.FileFormat;
 import mephi.lab3.validation.ValidationResult;
@@ -46,6 +47,26 @@ public class MissionMapper{
         return new Mission(entity.getMissionId(), entity.getDate(), entity.getLocation(), entity.getOutcome(), entity.getDamageCost(), toDomainSorcerers(entity.getParticipants()), toDomainCurse(entity.getCurse()), toDomainTechniques(entity.getTechniques()), entity.getNote(), readExtensions(entity.getExtensionData()));
     }
 
+    public MissionSummaryResponse toSummaryResponse(MissionEntity entity){
+        return new MissionSummaryResponse(entity.getMissionId(), entity.getDate(), entity.getLocation(), entity.getOutcome());
+    }
+
+    public MissionResponse toResponse(MissionEntity entity){
+        Mission mission = toDomain(entity);
+        return new MissionResponse(
+                mission.getMissionId(),
+                mission.getDate(),
+                mission.getLocation(),
+                mission.getOutcome(),
+                mission.getDamageCost(),
+                mission.getNote(),
+                toCurseDto(mission.getCurse()),
+                toSorcererDtos(mission.getParticipants()),
+                toTechniqueDtos(mission.getTechniques()),
+                toExtensionBlockDtos(mission.getExtensionBlocks())
+        );
+    }
+
     private void copyMissionFields(Mission mission, MissionEntity entity){
         entity.setMissionId(mission.getMissionId());
         entity.setDate(mission.getDate());
@@ -76,6 +97,13 @@ public class MissionMapper{
         return new Curse(entity.getName(), entity.getThreatLevel());
     }
 
+    private CurseDto toCurseDto(Curse curse){
+        if (curse == null){
+            return null;
+        }
+        return new CurseDto(curse.getName(), curse.getThreatLevel());
+    }
+
     private List<SorcererEntity> toSorcererEntitiesFromDomain(List<Sorcerer> sorcerers){
         List<SorcererEntity> entities = new ArrayList<>();
         if (sorcerers == null){
@@ -96,6 +124,17 @@ public class MissionMapper{
             sorcerers.add(new Sorcerer(entity.getName(), entity.getRank()));
         }
         return sorcerers;
+    }
+
+    private List<SorcererDto> toSorcererDtos(List<Sorcerer> sorcerers){
+        List<SorcererDto> result = new ArrayList<>();
+        if (sorcerers == null){
+            return result;
+        }
+        for (Sorcerer sorcerer : sorcerers){
+            result.add(new SorcererDto(sorcerer.getName(), sorcerer.getRank()));
+        }
+        return result;
     }
 
     private List<TechniqueEntity> toTechniqueEntitiesFromDomain(List<Technique> techniques){
@@ -120,6 +159,28 @@ public class MissionMapper{
             techniques.add(new Technique(entity.getName(), entity.getOwner(), entity.getType(), entity.getDamage()));
         }
         return techniques;
+    }
+
+    private List<TechniqueDto> toTechniqueDtos(List<Technique> techniques){
+        List<TechniqueDto> result = new ArrayList<>();
+        if (techniques == null){
+            return result;
+        }
+        for (Technique technique : techniques){
+            result.add(new TechniqueDto(technique.getName(), technique.getOwner(), technique.getType(), technique.getDamage()));
+        }
+        return result;
+    }
+
+    private List<ExtensionBlockDto> toExtensionBlockDtos(Map<String, MissionExtensionBlock> extensionBlocks){
+        List<ExtensionBlockDto> result = new ArrayList<>();
+        if (extensionBlocks == null){
+            return result;
+        }
+        for (MissionExtensionBlock block : extensionBlocks.values()){
+            result.add(new ExtensionBlockDto(block.getName(), block.getFields(), block.getEntries()));
+        }
+        return result;
     }
 
     private String writeExtensions(Map<String, MissionExtensionBlock> extensions){

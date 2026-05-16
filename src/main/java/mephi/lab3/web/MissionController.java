@@ -3,7 +3,7 @@ package mephi.lab3.web;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.*;
-import mephi.lab3.domain.Mission;
+import mephi.lab3.dto.*;
 import mephi.lab3.service.MissionService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -21,19 +21,19 @@ public class MissionController{
 
     @GetMapping
     @Operation(summary = "Получить список миссий из архива")
-    public List<Mission> findAll(){
+    public List<MissionSummaryResponse> findAll(){
         return missionService.findAll();
     }
 
     @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Импортировать миссию из файла")
-    public Map<String, Object> importFile(@RequestPart("file") MultipartFile file){
+    public ImportResponse importFile(@RequestPart("file") MultipartFile file){
         return missionService.importFile(file);
     }
 
     @GetMapping("/{missionId}")
     @Operation(summary = "Получить миссию по missionId")
-    public Mission findByMissionId(@PathVariable("missionId") String missionId){
+    public MissionResponse findByMissionId(@PathVariable("missionId") String missionId){
         return missionService.findByMissionId(missionId);
     }
 

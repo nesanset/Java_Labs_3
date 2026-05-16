@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import mephi.lab3.app.*;
-import mephi.lab3.domain.Mission;
+import mephi.lab3.dto.*;
 import mephi.lab3.entity.MissionEntity;
 import mephi.lab3.mapper.MissionMapper;
 import mephi.lab3.parsing.MissionParseException;
@@ -29,24 +29,24 @@ public class MissionService{
     }
 
     @Transactional(readOnly = true)
-    public List<Mission> findAll(){
+    public List<MissionSummaryResponse> findAll(){
         List<MissionEntity> missions = missionRepository.findAll();
-        List<Mission> result = new ArrayList<>();
+        List<MissionSummaryResponse> result = new ArrayList<>();
 
         for (MissionEntity mission : missions){
-            result.add(missionMapper.toDomain(mission));
+            result.add(missionMapper.toSummaryResponse(mission));
         }
 
         return result;
     }
 
     @Transactional(readOnly = true)
-    public Mission findByMissionId(String missionId){
-        return missionMapper.toDomain(findEntity(missionId));
+    public MissionResponse findByMissionId(String missionId){
+        return missionMapper.toResponse(findEntity(missionId));
     }
 
     @Transactional
-    public Map<String, Object> importFile(MultipartFile file){
+    public ImportResponse importFile(MultipartFile file){
         if (file == null || file.isEmpty()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Файл миссии не выбран");
         }
@@ -61,12 +61,7 @@ public class MissionService{
             savedMission = missionRepository.save(existing);
         }
         List<String> warnings = loadedMission.getValidationResult().getWarnings();
-        Map<String, Object> response = new LinkedHashMap<>();
-        response.put("missionId", savedMission.getMissionId());
-        response.put("sourceFormat", savedMission.getSourceFormat());
-        response.put("message", "Миссия успешно импортирована");
-        response.put("validationWarnings", warnings);
-        return response;
+        return new ImportResponse(savedMission.getMissionId(), savedMission.getSourceFormat(), "Миссия успешно импортирована", warnings);
     }
 
     @Transactional(readOnly = true)
