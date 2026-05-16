@@ -1,11 +1,11 @@
 package mephi.lab3;
 
-import org.springframework.boot.SpringApplication;//класс, который запускает приложение
-import org.springframework.boot.autoconfigure.SpringBootApplication;//главная нотация спринг
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication//аннотация - главный класс приложения
+@SpringBootApplication
 public class MissionArchiveApplication{
     public static void main(String[] args){
-        SpringApplication.run(MissionArchiveApplication.class, args);//поднимает сервер, подключает настройки, создает контроллеры, сервисы, репозитории
+        SpringApplication.run(MissionArchiveApplication.class, args);
     }
 }
