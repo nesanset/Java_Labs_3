@@ -16,10 +16,6 @@ public class SorcererEntity{
     @JoinColumn(name = "mission_id", nullable = false)
     private MissionEntity mission;
 
-    public Long getId(){
-        return id;
-    }
-
     public String getName(){
         return name;
     }
