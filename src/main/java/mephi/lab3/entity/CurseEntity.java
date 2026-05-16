@@ -14,7 +14,7 @@ public class CurseEntity{
     @Column(name = "threat_level")
     private String threatLevel;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "mission_id", nullable = false)
     private MissionEntity mission;
 

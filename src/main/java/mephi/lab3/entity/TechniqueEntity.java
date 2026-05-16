@@ -13,7 +13,7 @@ public class TechniqueEntity{
     private String type;
     private String damage;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "mission_id", nullable = false)
     private MissionEntity mission;
 
